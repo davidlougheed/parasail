@@ -968,6 +968,7 @@ int main(void) {
 }
 "
     INT64_LITERAL_SUFFIX_I64 )
+message(INT64_LITERAL_SUFFIX_I64="${INT64_LITERAL_SUFFIX_I64}")
 CHECK_C_SOURCE_COMPILES(
 "
 int main(void) {
