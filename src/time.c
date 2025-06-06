@@ -32,11 +32,11 @@ double parasail_time(void)
     double sec;
     double nsec;
     GetSystemTimeAsFileTime((FILETIME*)&wintime);
-#if defined(INT64_LITERAL_SUFFIX_I64)
+#if INT64_LITERAL_SUFFIX_I64 == 1
     wintime -=116444736000000000i64;   /*1jan1601 to 1jan1970*/
     sec  = wintime / 10000000i64;      /*seconds*/
     nsec = wintime % 10000000i64 *100; /*nano-seconds*/
-#elif defined(INT64_LITERAL_SUFFIX_LL)
+#elif INT64_LITERAL_SUFFIX_LL == 1
     wintime -=116444736000000000LL;   /*1jan1601 to 1jan1970*/
     sec  = wintime / 10000000LL;      /*seconds*/
     nsec = wintime % 10000000LL *100; /*nano-seconds*/
