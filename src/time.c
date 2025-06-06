@@ -41,6 +41,10 @@ double parasail_time(void)
     sec  = wintime / 10000000LL;      /*seconds*/
     nsec = wintime % 10000000LL *100; /*nano-seconds*/
 #else
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "The value of INT64_LITERAL_SUFFIX_I64: " XSTR(INT64_LITERAL_SUFFIX_I64)
+#pragma message "The value of INT64_LITERAL_SUFFIX_LL: " XSTR(INT64_LITERAL_SUFFIX_LL)
 #error unknown int64 literal suffix
 #endif
     return sec + nsec/1000000000.0;
