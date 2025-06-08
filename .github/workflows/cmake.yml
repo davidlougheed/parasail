@@ -27,6 +27,7 @@ jobs:
         msystem: ${{ matrix.mingw_sys }}
         update: false
         install: >-
+          mingw-w64-${{ matrix.mingw_env }}-toolchain
           mingw-w64-${{ matrix.mingw_env }}-cmake
           mingw-w64-${{ matrix.mingw_env }}-ninja
 
