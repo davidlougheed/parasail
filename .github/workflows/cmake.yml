@@ -40,7 +40,8 @@ jobs:
 
     - name: Configure CMake (MinGW)
       if: ${{ matrix.mingw_sys }}
-      run: cmake -B ${{github.workspace}}/build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      shell: msys2 {0}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake
       if: ${{ matrix.os != 'macos-latest' && !matrix.mingw_sys }}
@@ -50,8 +51,21 @@ jobs:
       run: cat ${{github.workspace}}/build/config.h
 
     - name: Build
+      if: ${{ !matrix.mingw_sys }}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Build (MinGW)
+      if: ${{ matrix.mingw_sys }}
+      shell: msys2 {0}
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
+      if: ${{ !matrix.mingw_sys }}
+      working-directory: ${{github.workspace}}/build
+      run: ctest --output-on-failure -C ${{env.BUILD_TYPE}}
+
+    - name: Test (MinGW)
+      if: ${{ matrix.mingw_sys }}
+      shell: msys2 {0}
       working-directory: ${{github.workspace}}/build
       run: ctest --output-on-failure -C ${{env.BUILD_TYPE}}
