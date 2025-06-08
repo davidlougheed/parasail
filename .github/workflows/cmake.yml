@@ -10,11 +10,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - { os: ubuntu-latest }
           - { os: macos-latest }
           - { os: windows-latest }
+          - { os: windows-latest, mingw_sys: mingw64, mingw_env: x86_64 }
           - { os: windows-latest, mingw_sys: ucrt64, mingw_env: ucrt-x86_64 }
 
     steps:
