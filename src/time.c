@@ -16,7 +16,7 @@
 #elif HAVE_CLOCK_GET_TIME
 #include <mach/clock.h>
 #include <mach/mach.h>
-#elif HAVE_CLOCK_GETTIME_MONOTONIC || HAVE_CLOCK_GETTIME_REALTIME
+#elif HAVE_CLOCK_GETTIME_MONOTONIC == 1 || HAVE_CLOCK_GETTIME_REALTIME == 1
 /* undef if needed to avoid compiler warning */
 #ifdef _POSIX_C_SOURCE
 #undef _POSIX_C_SOURCE
