@@ -44,7 +44,7 @@ jobs:
     - name: Configure CMake (MinGW)
       if: ${{ matrix.mingw_sys }}
       shell: msys2 {0}
-      run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B build -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake
       if: ${{ matrix.os != 'macos-latest' && !matrix.mingw_sys }}
