@@ -32,9 +32,7 @@ jobs:
 
     - name: Add MinGW binaries to PATH
       if: ${{ matrix.mingw_sys }}
-      run: |
-        where gcc
-        echo "/mingw64/bin" >> "$GITHUB_PATH"
+      run: echo "/mingw64/bin" >> "$GITHUB_PATH"
 
     - name: Configure CMake (osx cross)
       if: ${{ matrix.os == 'macos-latest' }}
