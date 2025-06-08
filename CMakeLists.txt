@@ -125,6 +125,66 @@ int main(int argc, char *argv[]){return 0;}
     ENDIF( )
 ENDIF( )
 
+
+CHECK_C_SOURCE_COMPILES(
+"
+int main(void) {
+    long long val = 116444736000000000i64;
+    return 0;
+}
+"
+    INT64_LITERAL_SUFFIX_I64 )
+CHECK_C_SOURCE_COMPILES(
+"
+int main(void) {
+    long long val = 116444736000000000LL;
+    return 0;
+}
+"
+    INT64_LITERAL_SUFFIX_LL )
+
+IF( HAVE_CLOCK_GETTIME_NATIVE )
+ELSEIF( HAVE_CLOCK_GETTIME_RT )
+    TARGET_LINK_LIBRARIES( parasail rt )
+ELSEIF( HAVE_CLOCK_GETTIME_PTHREAD )
+    TARGET_LINK_LIBRARIES( parasail pthread )
+ENDIF( )
+# check for monotonic
+CHECK_C_SOURCE_COMPILES(
+"
+#define _POSIX_C_SOURCE 199309L
+#include <time.h>
+double parasail_time(void) {
+    struct timespec ts;
+    /* Works on FreeBSD */
+    long retval = clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double)(ts.tv_sec) + (double)(ts.tv_nsec)/1000000000.0;
+}
+int main(void) {
+    double t = parasail_time();
+    return 0;
+}
+"
+    HAVE_CLOCK_GETTIME_MONOTONIC )
+# check for realtime
+CHECK_C_SOURCE_COMPILES(
+"
+#define _POSIX_C_SOURCE 199309L
+#include <time.h>
+double parasail_time(void) {
+    struct timespec ts;
+    /* Works on FreeBSD */
+    long retval = clock_gettime(CLOCK_REALTIME, &ts);
+    return (double)(ts.tv_sec) + (double)(ts.tv_nsec)/1000000000.0;
+}
+int main(void) {
+    double t = parasail_time();
+    return 0;
+}
+"
+    HAVE_CLOCK_GETTIME_REALTIME )
+
+
 SET( CMAKE_REQUIRED_INCLUDES stdint.h )
 
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_LIST_DIR} )
@@ -958,65 +1018,6 @@ IF( ZLIB_FOUND )
 ELSE( )
     SET( HAVE_ZLIB FALSE CACHE INTERNAL "" )
 ENDIF( )
-
-
-CHECK_C_SOURCE_COMPILES(
-"
-int main(void) {
-    long long val = 116444736000000000i64;
-    return 0;
-}
-"
-    INT64_LITERAL_SUFFIX_I64 )
-CHECK_C_SOURCE_COMPILES(
-"
-int main(void) {
-    long long val = 116444736000000000LL;
-    return 0;
-}
-"
-    INT64_LITERAL_SUFFIX_LL )
-
-IF( HAVE_CLOCK_GETTIME_NATIVE )
-ELSEIF( HAVE_CLOCK_GETTIME_RT )
-    TARGET_LINK_LIBRARIES( parasail rt )
-ELSEIF( HAVE_CLOCK_GETTIME_PTHREAD )
-    TARGET_LINK_LIBRARIES( parasail pthread )
-ENDIF( )
-# check for monotonic
-CHECK_C_SOURCE_COMPILES(
-"
-#define _POSIX_C_SOURCE 199309L
-#include <time.h>
-double parasail_time(void) {
-    struct timespec ts;
-    /* Works on FreeBSD */
-    long retval = clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (double)(ts.tv_sec) + (double)(ts.tv_nsec)/1000000000.0;
-}
-int main(void) {
-    double t = parasail_time();
-    return 0;
-}
-"
-    HAVE_CLOCK_GETTIME_MONOTONIC )
-# check for realtime
-CHECK_C_SOURCE_COMPILES(
-"
-#define _POSIX_C_SOURCE 199309L
-#include <time.h>
-double parasail_time(void) {
-    struct timespec ts;
-    /* Works on FreeBSD */
-    long retval = clock_gettime(CLOCK_REALTIME, &ts);
-    return (double)(ts.tv_sec) + (double)(ts.tv_nsec)/1000000000.0;
-}
-int main(void) {
-    double t = parasail_time();
-    return 0;
-}
-"
-    HAVE_CLOCK_GETTIME_REALTIME )
 
 IF( HAVE_SQRT_NATIVE )
 ELSEIF( HAVE_SQRT_M )
